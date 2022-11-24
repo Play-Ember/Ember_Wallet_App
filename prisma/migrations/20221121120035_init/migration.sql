@@ -1,8 +1,15 @@
-
--- DropTable
-PRAGMA foreign_keys=off;
-DROP TABLE "Post";
-PRAGMA foreign_keys=on;
+-- CreateTable
+CREATE TABLE "User" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "email" TEXT,
+    "name" TEXT,
+    "hasWallet" BOOLEAN NOT NULL DEFAULT false,
+    "wallet" TEXT,
+    "earnedTokens" INTEGER NOT NULL DEFAULT 0,
+    "spentTokens" INTEGER NOT NULL DEFAULT 0,
+    "balance" INTEGER NOT NULL DEFAULT 0
+);
 
 -- CreateTable
 CREATE TABLE "Game" (
@@ -11,7 +18,8 @@ CREATE TABLE "Game" (
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "image" TEXT NOT NULL,
-    "type" TEXT NOT NULL
+    "type" TEXT NOT NULL,
+    "subtype" TEXT NOT NULL
 );
 
 -- CreateTable
@@ -19,6 +27,9 @@ CREATE TABLE "Collectible" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
     "description" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "is_rare" BOOLEAN NOT NULL,
+    "is_a_skin" BOOLEAN NOT NULL,
     "image" TEXT NOT NULL,
     "ownerId" INTEGER NOT NULL,
     CONSTRAINT "Collectible_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -28,6 +39,7 @@ CREATE TABLE "Collectible" (
 CREATE TABLE "Reward" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "name" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "image" TEXT NOT NULL,
     "ownerId" INTEGER NOT NULL,
@@ -39,8 +51,20 @@ CREATE TABLE "Reward" (
 -- CreateTable
 CREATE TABLE "Avatar" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "avatarLevel" INTEGER NOT NULL DEFAULT 1,
     "ownerId" INTEGER NOT NULL,
     CONSTRAINT "Avatar_ownerId_fkey" FOREIGN KEY ("ownerId") REFERENCES "User" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
+);
+
+-- CreateTable
+CREATE TABLE "Skin" (
+    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    "name" TEXT NOT NULL,
+    "type" TEXT NOT NULL,
+    "image" TEXT NOT NULL,
+    "rarity" TEXT NOT NULL,
+    "avatarId" INTEGER NOT NULL,
+    CONSTRAINT "Skin_avatarId_fkey" FOREIGN KEY ("avatarId") REFERENCES "Avatar" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
 -- CreateTable
@@ -59,26 +83,8 @@ CREATE TABLE "_recommendedGames" (
     CONSTRAINT "_recommendedGames_B_fkey" FOREIGN KEY ("B") REFERENCES "User" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
 
--- RedefineTables
-PRAGMA foreign_keys=OFF;
-CREATE TABLE "new_User" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "email" TEXT NOT NULL,
-    "name" TEXT,
-    "hasWallet" BOOLEAN NOT NULL DEFAULT false,
-    "wallet" TEXT,
-    "avatarLevel" INTEGER NOT NULL DEFAULT 1,
-    "earnedTokens" INTEGER NOT NULL DEFAULT 0,
-    "spentTokens" INTEGER NOT NULL DEFAULT 0,
-    "balance" INTEGER NOT NULL DEFAULT 0
-);
-INSERT INTO "new_User" ("email", "id", "name") SELECT "email", "id", "name" FROM "User";
-DROP TABLE "User";
-ALTER TABLE "new_User" RENAME TO "User";
+-- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
-PRAGMA foreign_key_check;
-PRAGMA foreign_keys=ON;
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Avatar_ownerId_key" ON "Avatar"("ownerId");

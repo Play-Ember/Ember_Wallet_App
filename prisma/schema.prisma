@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,58 +8,74 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  email String  @unique
-  name  String?
-  hasWallet Boolean @default(false)
-  wallet String?
-  collectibles Collectible[]
-  avatar Avatar? @relation()
-  avatarLevel Int @default(1)
-  earnedTokens Int @default(0)
-  spentTokens Int @default(0)
-  balance Int @default(0)
-  playedGames Game[] @relation("playedGames")
-  recommendedGames Game[] @relation("recommendedGames")
-  wonRewards Reward[]
+  id               Int           @id @default(autoincrement())
+  createdAt        DateTime      @default(now())
+  email            String?       @unique
+  name             String
+  hasWallet        Boolean       @default(false)
+  wallet           String?
+  collectibles     Collectible[]
+  avatar           Avatar?       @relation()
+  earnedTokens     Int           @default(0)
+  spentTokens      Int           @default(0)
+  balance          Int           @default(0)
+  playedGames      Game[]        @relation("playedGames")
+  recommendedGames Game[]        @relation("recommendedGames")
+  wonRewards       Reward[]
 }
 
 model Game {
-  id    Int     @id @default(autoincrement())
-  createdAt DateTime @default(now())
-  name  String
-  description String
-  image String
-  type String
-  rewards Reward[]
-  playedBy User[] @relation("playedGames")
-  recommendedTo User[] @relation("recommendedGames")
+  id            Int      @id @default(autoincrement())
+  createdAt     DateTime @default(now())
+  name          String
+  description   String
+  image         String
+  type          String
+  subtype       String
+  rewards       Reward[]
+  playedBy      User[]   @relation("playedGames")
+  recommendedTo User[]   @relation("recommendedGames")
 }
 
 model Collectible {
-  id Int @id @default(autoincrement())
-  name String
+  id          Int     @id @default(autoincrement())
+  name        String
   description String
-  image String
-  user User @relation(fields: [ownerId], references: [id])
-  ownerId Int
+  type        String
+  is_rare     Boolean
+  is_a_skin   Boolean
+  image       String
+  user        User    @relation(fields: [ownerId], references: [id])
+  ownerId     Int
 }
 
+
 model Reward {
-  id Int @id @default(autoincrement())
-  name String
+  id          Int    @id @default(autoincrement())
+  name        String
+  type        String     
   description String
-  image String
-  user User @relation(fields: [ownerId], references: [id])
-  ownerId Int
-  game Game @relation(fields: [gameId], references: [id])
-  gameId Int
+  image       String
+  user        User   @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+  game        Game   @relation(fields: [gameId], references: [id])
+  gameId      Int
 }
 
 model Avatar {
-  id    Int     @id @default(autoincrement())
-  owner User @relation(fields: [ownerId], references: [id])
-  ownerId Int  @unique
+  id          Int    @id @default(autoincrement())
+  avatarLevel Int    @default(1)
+  skins       Skin[] @relation()
+  owner       User   @relation(fields: [ownerId], references: [id])
+  ownerId     Int    @unique
 }
 
+model Skin {
+  id       Int     @id @default(autoincrement())
+  name     String
+  type     String
+  image    String
+  rarity   String
+  avatar   Avatar? @relation(fields: [avatarId], references: [id])
+  avatarId Int
+}
