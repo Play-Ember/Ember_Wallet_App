@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "earnedTokens" DROP DEFAULT,
+ALTER COLUMN "spentTokens" DROP DEFAULT,
+ALTER COLUMN "balance" DROP DEFAULT;
