@@ -1,5 +1,5 @@
 import { any } from 'jest-mock-extended'
-import { createUser } from '../api'
+import { createUser } from '../Users_Api'
 
 import { prismaMock } from '../singleton'
 
