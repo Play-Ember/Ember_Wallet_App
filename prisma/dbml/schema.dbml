@@ -1,0 +1,118 @@
+//// ------------------------------------------------------
+//// THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+//// ------------------------------------------------------
+
+Table User {
+  id Int [pk, increment]
+  createdAt Int [not null]
+  name String [not null]
+  hasWallet Boolean [default: false]
+  wallet String
+  collectibles Collectible [not null]
+  avatar Avatar
+  earnedTokens Int
+  spentTokens Int
+  balance Int
+  playedGames Game [not null]
+  recommendedGames Game [not null]
+  wonRewards Reward [not null]
+}
+
+Table Reward {
+  id Int [pk, increment]
+  title String [not null]
+  subtitle String [not null]
+  expiresAt DateTime [not null]
+  price Int [not null]
+  image String [not null]
+  callToAction String [not null]
+  topReward Boolean [not null, default: false]
+  type String
+  user User
+  gameId Int
+  game Game
+  ownerId Int
+}
+
+Table Game {
+  id Int [pk, increment]
+  createdAt DateTime [default: `now()`, not null]
+  title String [unique, not null]
+  subtitle String [not null]
+  coverImage String [not null]
+  smallImage String [not null]
+  topGame Boolean [not null, default: false]
+  type String
+  subtype String
+  rewards Reward [not null]
+  playedBy User [not null]
+  recommendedTo User [not null]
+}
+
+Table Avatar {
+  id Int [pk, increment]
+  avatarLevel Int [not null, default: 1]
+  accessories Accessory [not null]
+  owner User [not null]
+  ownerId Int [unique, not null]
+}
+
+Table Accessory {
+  id Int [pk, increment]
+  name String [not null]
+  category AccessoryType [not null]
+  bundle String [not null]
+  image String [not null]
+  equipped Boolean [not null, default: false]
+  rarity String
+  avatar Avatar
+  avatarId Int
+}
+
+Table Collectible {
+  id Int [pk, increment]
+  name String [not null]
+  description String [not null]
+  type CollectibleType [not null]
+  is_rare Boolean [not null]
+  is_a_skin Boolean [not null]
+  image String [not null]
+  user User [not null]
+  ownerId Int [not null]
+}
+
+Table playedGames {
+  playedgamesId Int [ref: > Game.id]
+  playedbyId Int [ref: > User.id]
+}
+
+Table recommendedGames {
+  recommendedgamesId Int [ref: > Game.id]
+  recommendedtoId Int [ref: > User.id]
+}
+
+Enum AccessoryType {
+  HAT
+  GLASSES
+  MASK
+  SHIRT
+  PANTS
+  SHOES
+  ELECTRONICS
+  SPORT
+}
+
+Enum CollectibleType {
+  Accessory
+  NFT
+}
+
+Ref: Reward.ownerId > User.id
+
+Ref: Reward.gameId > Game.id
+
+Ref: Avatar.ownerId - User.id
+
+Ref: Accessory.avatarId > Avatar.id
+
+Ref: Collectible.ownerId > User.id
