@@ -1,35 +1,31 @@
-import { PrismaClient } from '@prisma/client'
+import prisma from './client'
 
-const prisma = new PrismaClient()
-
-/* createUser('paul', true)
-  const users = await
- */
-  // const users = await findUsers()
 
 async function main() {
-  //createUser('ppli', true)
-  findUsers()
+
 }
 
 //USERS
 
 interface User {
     name: string
-    createdAt: number
 }
 
-export const createUser = async (user: User) => {
-    console.log(user)
+export const createUser = async (name: string, id: number) => {
     return await prisma.user.create({
-      data: user,
+      data: {
+        name: name,
+        id: id
+      }
     })
   } 
    
   const findUsers = async () => {
     const users = await prisma.user.findMany()
     console.log(users)
-  } 
+  }
+  
+
 
   const deleteUser = async (id: number) => {
     await prisma.user.delete({

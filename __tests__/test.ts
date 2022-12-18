@@ -4,29 +4,32 @@ import { createUser } from '../Users_Api'
 import { prismaMock } from '../singleton'
 
 test('should create new user ', async () => {
-  const user = {
-    id: 156,
-    name: 'lukeypen',
-    createdAt: 1234,
-    hasWallet: false,
-    wallet: null,
+ const user = {
+    balance: null,
+    name: 'nunu',
+    brandSelection: [],
     earnedTokens: null,
+    hasAvatar: null,
+    hasWallet: false,
+    id: 310,
+    rewardTypeSelection: [],
     spentTokens: null,
-    balance: null
-  }
+    wallet: null
+  } 
 
   prismaMock.user.create.mockResolvedValue(user)
 
-  await expect(createUser(user)).resolves.toEqual({
-    id: 156,
-    name: 'lukeypen',
-    email: 'hnnnnnnnn',
-    hasWallet: false,
-    wallet: null,
-    earnedTokens: null,
-    spentTokens: null,
-    balance: null,
-    createdAt: 1234
+  await expect(createUser("nunu", 310)).resolves.toEqual({
+    "balance": null,
+    "brandSelection": [],
+    "earnedTokens": null,
+    "hasAvatar": null,
+    "hasWallet": false,
+    "id": 310,
+    "name": "nunu",
+    "rewardTypeSelection": [],
+    "spentTokens": null,
+    "wallet": null,
   })
 })
 /* 

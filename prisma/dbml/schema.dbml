@@ -3,12 +3,11 @@
 //// ------------------------------------------------------
 
 Table User {
-  id Int [pk, increment]
-  createdAt Int [not null]
+  id Int [pk]
   name String [not null]
   hasWallet Boolean [default: false]
   wallet String
-  collectibles Collectible [not null]
+  hasAvatar Boolean
   avatar Avatar
   earnedTokens Int
   spentTokens Int
@@ -16,6 +15,9 @@ Table User {
   playedGames Game [not null]
   recommendedGames Game [not null]
   wonRewards Reward [not null]
+  ownedCollectibles Collectible [not null]
+  brandSelection Brand[] [not null]
+  rewardTypeSelection RewardType[] [not null]
 }
 
 Table Reward {
@@ -27,7 +29,9 @@ Table Reward {
   image String [not null]
   callToAction String [not null]
   topReward Boolean [not null, default: false]
-  type String
+  type RewardType [not null]
+  branded Boolean [not null]
+  brand Brand
   user User
   gameId Int
   game Game
@@ -47,6 +51,19 @@ Table Game {
   rewards Reward [not null]
   playedBy User [not null]
   recommendedTo User [not null]
+}
+
+Table Collectible {
+  id Int [pk, increment]
+  name String [not null]
+  description String [not null]
+  type String [not null]
+  is_rare Boolean [not null]
+  is_an_accesory Boolean [not null]
+  is_an_nft Boolean [not null]
+  image String [not null]
+  user User [not null]
+  ownerId Int [not null]
 }
 
 Table Avatar {
@@ -69,18 +86,6 @@ Table Accessory {
   avatarId Int
 }
 
-Table Collectible {
-  id Int [pk, increment]
-  name String [not null]
-  description String [not null]
-  type CollectibleType [not null]
-  is_rare Boolean [not null]
-  is_a_skin Boolean [not null]
-  image String [not null]
-  user User [not null]
-  ownerId Int [not null]
-}
-
 Table playedGames {
   playedgamesId Int [ref: > Game.id]
   playedbyId Int [ref: > User.id]
@@ -89,6 +94,22 @@ Table playedGames {
 Table recommendedGames {
   recommendedgamesId Int [ref: > Game.id]
   recommendedtoId Int [ref: > User.id]
+}
+
+Enum Brand {
+  Nike
+  Adidas
+  Amazon
+  Starbucks
+}
+
+Enum RewardType {
+  Fashion
+  Drinks
+  Sports
+  Games
+  Ember
+  Collectible
 }
 
 Enum AccessoryType {
@@ -102,17 +123,12 @@ Enum AccessoryType {
   SPORT
 }
 
-Enum CollectibleType {
-  Accessory
-  NFT
-}
-
 Ref: Reward.ownerId > User.id
 
 Ref: Reward.gameId > Game.id
 
+Ref: Collectible.ownerId > User.id
+
 Ref: Avatar.ownerId - User.id
 
 Ref: Accessory.avatarId > Avatar.id
-
-Ref: Collectible.ownerId > User.id

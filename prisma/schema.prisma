@@ -14,14 +14,15 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+//id Int @id @default(autoincrement())
 
 model User {
-  id               Int           @id @default(autoincrement())
-  createdAt        Int          
+  id               Int           @id 
+  //createdAt        Int          
   name             String
   hasWallet        Boolean?      @default(false)
   wallet           String?
-  collectibles     Collectible[]
+  hasAvatar        Boolean?
   avatar           Avatar?       @relation()
   earnedTokens     Int?    
   spentTokens      Int?        
@@ -29,6 +30,25 @@ model User {
   playedGames      Game[]        @relation("playedGames")
   recommendedGames Game[]        @relation("recommendedGames")
   wonRewards       Reward[]
+  ownedCollectibles Collectible[]
+  brandSelection   Brand[]
+  rewardTypeSelection RewardType[]
+}
+
+enum Brand {
+  Nike
+  Adidas
+  Amazon
+  Starbucks
+}
+
+enum RewardType {
+  Fashion
+  Drinks
+  Sports
+  Games
+  Ember
+  Collectible
 }
 
 model Reward {
@@ -40,7 +60,9 @@ model Reward {
   image        String
   callToAction String
   topReward    Boolean  @default(false)
-  type         String?
+  type         RewardType
+  branded      Boolean
+  brand        Brand?
   user         User?    @relation(fields: [ownerId], references: [id])
   gameId       Int?
   game         Game?    @relation(fields: [gameId], references: [id])
@@ -62,23 +84,27 @@ model Game {
   recommendedTo User[]   @relation("recommendedGames")
 }
 
+
+model Collectible {
+  id          Int     @id @default(autoincrement())
+  name        String
+  description String
+  type        String
+  is_rare     Boolean
+  is_an_accesory   Boolean
+  is_an_nft Boolean
+  image       String
+  user        User    @relation(fields: [ownerId], references: [id])
+  ownerId     Int
+}
+
+
 model Avatar {
   id          Int        @id @default(autoincrement())
   avatarLevel Int        @default(1)
   accessories  Accessory[] @relation()
   owner       User       @relation(fields: [ownerId], references: [id])
   ownerId     Int        @unique
-}
-
-enum AccessoryType {
-  HAT
-  GLASSES
-  MASK
-  SHIRT
-  PANTS
-  SHOES
-  ELECTRONICS 
-  SPORT
 }
 
 model Accessory {
@@ -93,19 +119,13 @@ model Accessory {
   avatarId Int?
 }
 
-enum CollectibleType {
- Accessory
- NFT
-}
-
-model Collectible {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String
-  type        CollectibleType
-  is_rare     Boolean
-  is_a_skin   Boolean
-  image       String
-  user        User    @relation(fields: [ownerId], references: [id])
-  ownerId     Int
+enum AccessoryType {
+  HAT
+  GLASSES
+  MASK
+  SHIRT
+  PANTS
+  SHOES
+  ELECTRONICS 
+  SPORT
 }
