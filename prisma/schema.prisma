@@ -18,11 +18,10 @@ datasource db {
 
 model User {
   id               Int           @id 
-  //createdAt        Int          
+  //createdAt     DateTime @default(now())     
   name             String
-  hasWallet        Boolean?      @default(false)
-  wallet           String?
-  hasAvatar        Boolean?
+  // hasWallet        Boolean?      @default(false)
+  //  hasAvatar        Boolean?
   avatar           Avatar?       @relation()
   earnedTokens     Int?    
   spentTokens      Int?        
@@ -54,14 +53,13 @@ enum RewardType {
 model Reward {
   id           Int      @id @default(autoincrement())
   title        String
-  subtitle     String
-  expiresAt    DateTime
-  price        Int
-  image        String
-  callToAction String
+  subtitle     String?
+  expiresAt    DateTime?
+  price        Int?
+  image        String?
   topReward    Boolean  @default(false)
-  type         RewardType
-  branded      Boolean
+  type         RewardType?
+  branded      Boolean?
   brand        Brand?
   user         User?    @relation(fields: [ownerId], references: [id])
   gameId       Int?
@@ -70,12 +68,12 @@ model Reward {
 }
 
 model Game {
-  id            Int      @id @default(autoincrement())
-  createdAt     DateTime @default(now())
-  title         String   @unique
-  subtitle      String
-  coverImage    String
-  smallImage    String
+  id            Int     @id
+  //createdAt     DateTime @default(now())
+  title         String   
+  subtitle      String?
+  coverImage    String?
+  smallImage    String?
   topGame       Boolean  @default(false)
   type          String?
   subtype       String?
@@ -85,47 +83,47 @@ model Game {
 }
 
 
-model Collectible {
-  id          Int     @id @default(autoincrement())
-  name        String
-  description String
-  type        String
-  is_rare     Boolean
-  is_an_accesory   Boolean
-  is_an_nft Boolean
-  image       String
-  user        User    @relation(fields: [ownerId], references: [id])
-  ownerId     Int
-}
+// model Collectible {
+//   id          Int     @id @default(autoincrement())
+//   name        String
+//   description String?
+//   type        String?
+//   is_rare     Boolean?
+//   is_an_accesory   Boolean?
+//   is_an_nft Boolean?
+//   image       String?
+//   user        User    @relation(fields: [ownerId], references: [id])
+//   ownerId     Int
+// }
 
 
-model Avatar {
-  id          Int        @id @default(autoincrement())
-  avatarLevel Int        @default(1)
-  accessories  Accessory[] @relation()
-  owner       User       @relation(fields: [ownerId], references: [id])
-  ownerId     Int        @unique
-}
+// model Avatar {
+//   id          Int        @id @default(autoincrement())
+//   avatarLevel Int ?       @default(1)
+//   accessories  Accessory[] @relation()
+//   owner       User ?      @relation(fields: [ownerId], references: [id])
+//   ownerId     Int  ?      @unique
+// }
 
-model Accessory {
-  id       Int     @id @default(autoincrement())
-  name     String
-  category AccessoryType
-  bundle   String
-  image    String
-  equipped Boolean @default(false)
-  rarity   String?
-  avatar   Avatar? @relation(fields: [avatarId], references: [id])
-  avatarId Int?
-}
+// model Accessory {
+//   id       Int     @id @default(autoincrement())
+//   name     String
+//   category AccessoryType?
+//   bundle   String?
+//   image    String?
+//   equipped Boolean @default(false)
+//   rarity   String?
+//   avatar   Avatar? @relation(fields: [avatarId], references: [id])
+//   avatarId Int?
+// }
 
-enum AccessoryType {
-  HAT
-  GLASSES
-  MASK
-  SHIRT
-  PANTS
-  SHOES
-  ELECTRONICS 
-  SPORT
-}
+// enum AccessoryType {
+//   HAT
+//   GLASSES
+//   MASK
+//   SHIRT
+//   PANTS
+//   SHOES
+//   ELECTRONICS 
+//   SPORT
+// }

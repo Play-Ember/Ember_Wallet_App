@@ -69,14 +69,29 @@ const deleteReward = async (id: number) => {
     console.log(reward)
    }
 
-const addRewardtoPlayer = async (id: number, rewardId: number) => {
-   const reward = await prisma.reward.update({
-       where: {
-           id
-       },
-       data: {
-        
-       }
-   })
-   console.log(reward)
+// a function to add a reward to a user
+export const giveRewardToUser = async (userId: number, rewardId: number) => {
+  // add the reward to the user wonRewards field
+    const updatedUser = await prisma.user.update({
+        where: {
+            id: userId
+        },
+        data: {
+            wonRewards: {
+                connect: {
+                    id: rewardId
+                }
+            }
+        }
+    })
+    console.log(updatedUser)
+}
+
+export const getRewardPrice = async (rewardId: number) => {
+    const reward = await prisma.reward.findUnique({
+        where: {
+            id: rewardId
+        }
+    })
+    return reward?.price
 }

@@ -23,14 +23,14 @@ Table User {
 Table Reward {
   id Int [pk, increment]
   title String [not null]
-  subtitle String [not null]
-  expiresAt DateTime [not null]
-  price Int [not null]
-  image String [not null]
-  callToAction String [not null]
+  subtitle String
+  expiresAt DateTime
+  price Int
+  image String
+  callToAction String
   topReward Boolean [not null, default: false]
-  type RewardType [not null]
-  branded Boolean [not null]
+  type RewardType
+  branded Boolean
   brand Brand
   user User
   gameId Int
@@ -39,12 +39,11 @@ Table Reward {
 }
 
 Table Game {
-  id Int [pk, increment]
-  createdAt DateTime [default: `now()`, not null]
-  title String [unique, not null]
-  subtitle String [not null]
-  coverImage String [not null]
-  smallImage String [not null]
+  id Int [pk]
+  title String [not null]
+  subtitle String
+  coverImage String
+  smallImage String
   topGame Boolean [not null, default: false]
   type String
   subtype String
@@ -56,30 +55,30 @@ Table Game {
 Table Collectible {
   id Int [pk, increment]
   name String [not null]
-  description String [not null]
-  type String [not null]
-  is_rare Boolean [not null]
-  is_an_accesory Boolean [not null]
-  is_an_nft Boolean [not null]
-  image String [not null]
+  description String
+  type String
+  is_rare Boolean
+  is_an_accesory Boolean
+  is_an_nft Boolean
+  image String
   user User [not null]
   ownerId Int [not null]
 }
 
 Table Avatar {
   id Int [pk, increment]
-  avatarLevel Int [not null, default: 1]
+  avatarLevel Int [default: 1]
   accessories Accessory [not null]
-  owner User [not null]
-  ownerId Int [unique, not null]
+  owner User
+  ownerId Int [unique]
 }
 
 Table Accessory {
   id Int [pk, increment]
   name String [not null]
-  category AccessoryType [not null]
-  bundle String [not null]
-  image String [not null]
+  category AccessoryType
+  bundle String
+  image String
   equipped Boolean [not null, default: false]
   rarity String
   avatar Avatar
